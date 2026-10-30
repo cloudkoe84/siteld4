@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Aplikasi Hub - Landing Page</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              dark: '#064e3b'
+            },
+            tealbrand: {
+              500: '#14b8a6',
+              600: '#0d9488'
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Full Page Overlay untuk Blogger tanpa Ubah XML Template */
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow-x: hidden;
+      background-color: #f8fafc;
+    }
+    #app-portal-root {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 999999;
+      background-color: #f8fafc;
+      overflow-y: auto;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #10b981;
+      border-radius: 4px;
+    }
+    /* Animation Utility */
+    .fade-in {
+      animation: fadeIn 0.25s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <!-- THUMBNAIL BLOGGER TERSEMBUNYI -->
+  <div style="display: none !important;" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop" alt="Portal Aplikasi Preview Thumbnail" />
+  </div>
+
+  <!-- CONTAINER UTAMA PORTAL -->
+  <div id="app-portal-root">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/80 transition-all">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3 cursor-pointer" onclick="resetFilters()">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-tealbrand-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+            <i data-lucide="grid" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-lg font-bold text-slate-900 tracking-tight leading-none">AppPortal</h1>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-brand-100 text-brand-700">
+                <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse mr-1"></span> Live
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Pusat Aplikasi Terpadu</p>
+          </div>
+        </div>
+
+        <!-- Central Search Bar -->
+        <div class="flex-1 max-w-md hidden md:block">
+          <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Cari nama aplikasi atau deskripsi..." class="w-full pl-10 pr-4 py-2 text-sm bg-slate-100 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all">
+          </div>
+        </div>
+
+        <!-- Actions / Admin Button -->
+        <div class="flex items-center gap-2">
+          <div id="userStatusBadge" class="hidden sm:flex items-center gap-2 mr-2">
+            <!-- Dynamic User Status -->
+          </div>
+          <button id="authBtn" onclick="toggleAuthModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all">
+            <i data-lucide="shield-check" class="w-4 h-4 text-brand-600"></i>
+            <span id="authBtnText">Admin Login</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Search Input Bar -->
+      <div class="px-4 pb-3 md:hidden">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input type="text" id="searchMobileInput" oninput="handleSearch(this.value)" placeholder="Cari aplikasi..." class="w-full pl-10 pr-4 py-2 text-sm bg-slate-100 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white">
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO BANNER -->
+    <section class="relative overflow-hidden bg-gradient-to-r from-brand-700 via-tealbrand-600 to-brand-600 text-white py-10 px-4 sm:px-6 lg:px-8 shadow-inner">
+      <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+      <div class="relative max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="max-w-2xl text-center md:text-left">
+          <span class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-white/20 backdrop-blur-md mb-3">
+            ✨ Portal Layanan & Manajemen Terpadu
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Temukan & Akses Aplikasi Pilihan Anda</h2>
+          <p class="text-brand-100 text-sm mt-2 leading-relaxed">
+            Klik aplikasi untuk membuka langsung di tab baru. Akses seluruh aplikasi sistem layanan dan manajemen secara instan.
+          </p>
+        </div>
+
+        <!-- Stats Counters -->
+        <div class="flex items-center gap-3 sm:gap-4 bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20">
+          <div class="text-center px-3">
+            <div id="statTotalApps" class="text-xl sm:text-2xl font-bold">0</div>
+            <div class="text-[11px] text-brand-100">Total Apps</div>
+          </div>
+          <div class="h-8 w-px bg-white/20"></div>
+          <div class="text-center px-3">
+            <div id="statActiveApps" class="text-xl sm:text-2xl font-bold">0</div>
+            <div class="text-[11px] text-brand-100">Aktif</div>
+          </div>
+          <div class="h-8 w-px bg-white/20"></div>
+          <div class="text-center px-3">
+            <div id="statTotalClicks" class="text-xl sm:text-2xl font-bold">0</div>
+            <div class="text-[11px] text-brand-100">Akses</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      
+      <!-- CONTROLS & FILTER BAR -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        
+        <!-- Category Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 no-scrollbar" id="categoryChips">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Admin Control Bar (Visible when logged in) -->
+        <div id="adminControls" class="hidden items-center gap-2 w-full sm:w-auto justify-end">
+          <button onclick="openAddAppModal()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow-md shadow-brand-500/20 transition-all">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>Tambah Aplikasi</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- FEATURED APPS SECTION -->
+      <div id="featuredSection" class="mb-10 hidden">
+        <div class="flex items-center gap-2 mb-4">
+          <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i>
+          <h3 class="text-lg font-bold text-slate-900">Aplikasi Unggulan</h3>
+        </div>
+        <div id="featuredGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- ALL APPS SECTION -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <i data-lucide="layout-grid" class="w-5 h-5 text-brand-600"></i>
+            <h3 class="text-lg font-bold text-slate-900" id="catalogTitle">Semua Aplikasi</h3>
+          </div>
+          <span id="appCountBadge" class="text-xs text-slate-500 font-medium">Menampilkan 0 aplikasi</span>
+        </div>
+
+        <!-- App Grid -->
+        <div id="appsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-16 px-4 bg-white rounded-3xl border border-slate-200/80 my-4">
+          <div class="w-16 h-16 bg-brand-50 text-brand-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="search-x" class="w-8 h-8"></i>
+          </div>
+          <h4 class="text-base font-bold text-slate-900">Aplikasi Tidak Ditemukan</h4>
+          <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Coba gunakan kata kunci pencarian lain atau pilih kategori yang berbeda.</p>
+          <button onclick="resetFilters()" class="mt-4 px-4 py-2 text-xs font-semibold text-brand-600 bg-brand-50 hover:bg-brand-100 rounded-xl transition-all">
+            Reset Pencarian
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-200 bg-white mt-16 py-6">
+      <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+        <p>© 2026 AppPortal Hub. Powered by Google Apps Script & Blogger.</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- MODAL 1: ADMIN LOGIN MODAL -->
+  <div id="authModal" class="fixed inset-0 z-[1000000] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden fade-in">
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 flex items-center justify-center">
+              <i data-lucide="lock" class="w-4 h-4"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">Login Admin Portal</h3>
+          </div>
+          <button onclick="closeAuthModal()" class="text-slate-400 hover:text-slate-600 p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Username</label>
+            <input type="text" id="loginUsername" required placeholder="Masukkan username" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Password</label>
+            <input type="password" id="loginPassword" required placeholder="Masukkan password" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+
+          <div id="loginError" class="hidden text-xs text-rose-600 bg-rose-50 p-2.5 rounded-xl border border-rose-200 font-medium"></div>
+
+          <button type="submit" id="loginSubmitBtn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow-md shadow-brand-500/20 transition-all">
+            Masuk ke Panel Admin
+          </button>
+        </form>
+
+        <div class="mt-4 p-3 bg-slate-50 rounded-xl text-[11px] text-slate-500 border border-slate-200">
+          <p class="font-semibold text-slate-700">Kredensial Demo Preview:</p>
+          <p>Username: <code class="bg-slate-200 px-1 rounded text-slate-800">admin</code></p>
+          <p>Password: <code class="bg-slate-200 px-1 rounded text-slate-800">edudigital</code></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: ADD / EDIT APP FORM MODAL -->
+  <div id="appFormModal" class="fixed inset-0 z-[1000000] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden my-8 fade-in">
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+          <h3 id="formModalTitle" class="text-base font-bold text-slate-900">Tambah Aplikasi Baru</h3>
+          <button onclick="closeAppFormModal()" class="text-slate-400 hover:text-slate-600 p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form id="appForm" onsubmit="handleAppFormSubmit(event)" class="space-y-4">
+          <input type="hidden" id="formAppId">
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Aplikasi *</label>
+            <input type="text" id="formTitle" required placeholder="Contoh: Layanan Konsultasi Online" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Kategori *</label>
+              <select id="formCategory" required class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="Layanan">Layanan</option>
+                <option value="Manajemen">Manajemen</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Ikon Lucide *</label>
+              <input type="text" id="formIcon" required placeholder="headphones / user-check / file-text" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">URL Aplikasi / GAS Web App *</label>
+            <input type="url" id="formEmbedUrl" required placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Deskripsi Singkat</label>
+            <textarea id="formDescription" rows="3" placeholder="Jelaskan fungsi aplikasi..." class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+          </div>
+
+          <div class="flex items-center gap-6 pt-2">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="formIsActive" checked class="w-4 h-4 text-brand-600 rounded focus:ring-brand-500 border-slate-300">
+              <span class="text-xs font-semibold text-slate-700">Aktif (Tampil)</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="formIsFeatured" class="w-4 h-4 text-amber-500 rounded focus:ring-amber-400 border-slate-300">
+              <span class="text-xs font-semibold text-slate-700">Tampilkan di Unggulan</span>
+            </label>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+            <button type="button" onclick="closeAppFormModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl">
+              Batal
+            </button>
+            <button type="submit" id="formSubmitBtn" class="px-5 py-2 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl shadow-md shadow-brand-500/20">
+              Simpan Data
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP ENGINE -->
+  <script>
+    // ==========================================
+    // KONFIGURASI APLIKASI & DEPLOYMENT SAKLAR
+    // ==========================================
+    // UBAH IS_PREVIEW KE false JIKA AKAN DI-DEPLOY KE BLOGGER TERHUBUNG GAS
+    const IS_PREVIEW = false;
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbx3bEgc_D9YY9NXZKbs4XnUHTWbHJxawSshYsIO8u5_FJ5EcPjjcq6PDHo2ju5Ykji4jQ/exec";
+
+    // GLOBAL STATE
+    let appsData = [];
+    let currentCategory = 'Semua';
+    let searchQuery = '';
+    let currentUser = null; // null or { username: 'admin', role: 'Admin' }
+
+    // DUMMY DATA FOR PREVIEW MODE (KATEGORI: LAYANAN & MANAJEMEN)
+    const initialDummyApps = [
+      { id: 'APP-001', title: 'Portal Layanan Pengaduan', description: 'Sistem penerimaan dan pelacakan aspirasi & pengaduan publik.', category: 'Layanan', icon: 'headphones', embed_url: 'https://wikipedia.org', is_active: true, is_featured: true, click_count: 142 },
+      { id: 'APP-002', title: 'Manajemen Kehadiran Digital', description: 'Aplikasi pencatatan dan rekap data kehadiran pegawai.', category: 'Manajemen', icon: 'user-check', embed_url: 'https://bing.com', is_active: true, is_featured: true, click_count: 389 },
+      { id: 'APP-003', title: 'Layanan Permohonan Dokumen', description: 'Formulir pengajuan berkas dan verifikasi status surat.', category: 'Layanan', icon: 'file-text', embed_url: 'https://example.com', is_active: true, is_featured: false, click_count: 95 },
+      { id: 'APP-004', title: 'Manajemen Inventaris Barang', description: 'Pendataan dan pengelolaan aset inventaris kantor.', category: 'Manajemen', icon: 'boxes', embed_url: 'https://example.com', is_active: true, is_featured: true, click_count: 210 },
+      { id: 'APP-005', title: 'Layanan Konsultasi Online', description: 'Portal pemesanan jadwal konsultasi & pesan bimbingan.', category: 'Layanan', icon: 'message-square', embed_url: 'https://example.com', is_active: true, is_featured: false, click_count: 67 },
+      { id: 'APP-006', title: 'Manajemen Agenda & Event', description: 'Pengelolaan kegiatan harian dan reservasi ruang rapat.', category: 'Manajemen', icon: 'calendar', embed_url: 'https://example.com', is_active: true, is_featured: false, click_count: 150 }
+    ];
+
+    // INITIALIZATION
+    window.addEventListener('DOMContentLoaded', () => {
+      loadAppsData();
+    });
+
+    // FETCH DATA
+    async function loadAppsData() {
+      if (IS_PREVIEW) {
+        const stored = localStorage.getItem('appportal_dummy_apps');
+        if (stored) {
+          appsData = JSON.parse(stored);
+        } else {
+          appsData = [...initialDummyApps];
+          saveLocalDummy();
+        }
+        renderPortal();
+      } else {
+        try {
+          const res = await fetch(`${GAS_URL}?action=getApps`);
+          const json = await res.json();
+          if (json.status === 'success') {
+            appsData = json.data;
+            renderPortal();
+          }
+        } catch (err) {
+          console.error("Gagal memuat data dari GAS:", err);
+        }
+      }
+    }
+
+    function saveLocalDummy() {
+      if (IS_PREVIEW) {
+        localStorage.setItem('appportal_dummy_apps', JSON.stringify(appsData));
+      }
+    }
+
+    // RENDER MAIN PORTAL
+    function renderPortal() {
+      renderStats();
+      renderCategoryChips();
+      renderAppsGrid();
+      updateUserUI();
+      lucide.createIcons();
+    }
+
+    function renderStats() {
+      const activeApps = appsData.filter(a => a.is_active);
+      const totalClicks = appsData.reduce((acc, curr) => acc + (parseInt(curr.click_count) || 0), 0);
+
+      document.getElementById('statTotalApps').innerText = appsData.length;
+      document.getElementById('statActiveApps').innerText = activeApps.length;
+      document.getElementById('statTotalClicks').innerText = totalClicks;
+    }
+
+    function renderCategoryChips() {
+      const categories = ['Semua', 'Layanan', 'Manajemen'];
+      const container = document.getElementById('categoryChips');
+      
+      container.innerHTML = categories.map(cat => {
+        const isActive = currentCategory === cat;
+        return `
+          <button onclick="setCategory('${cat}')" class="px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+            isActive 
+              ? 'bg-brand-600 text-white shadow-md shadow-brand-500/20' 
+              : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+          }">
+            ${cat}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      renderPortal();
+    }
+
+    function handleSearch(val) {
+      searchQuery = val.toLowerCase().trim();
+      renderAppsGrid();
+    }
+
+    function resetFilters() {
+      currentCategory = 'Semua';
+      searchQuery = '';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('searchMobileInput').value = '';
+      renderPortal();
+    }
+
+    function getFilteredApps() {
+      return appsData.filter(app => {
+        // Guest only sees active apps; Admin sees all
+        const matchesActive = currentUser ? true : app.is_active;
+        const matchesCat = currentCategory === 'Semua' || app.category === currentCategory;
+        const matchesSearch = app.title.toLowerCase().includes(searchQuery) || 
+                              app.description.toLowerCase().includes(searchQuery);
+        return matchesActive && matchesCat && matchesSearch;
+      });
+    }
+
+    function renderAppsGrid() {
+      const filtered = getFilteredApps();
+      const featured = filtered.filter(a => a.is_featured);
+      
+      // Featured Section
+      const featuredSec = document.getElementById('featuredSection');
+      const featuredGrid = document.getElementById('featuredGrid');
+      
+      if (featured.length > 0 && currentCategory === 'Semua' && !searchQuery) {
+        featuredSec.classList.remove('hidden');
+        featuredGrid.innerHTML = featured.map(app => createCardHTML(app, true)).join('');
+      } else {
+        featuredSec.classList.add('hidden');
+      }
+
+      // All Apps Section
+      const appsGrid = document.getElementById('appsGrid');
+      const emptyState = document.getElementById('emptyState');
+      document.getElementById('appCountBadge').innerText = `Menampilkan ${filtered.length} aplikasi`;
+      document.getElementById('catalogTitle').innerText = currentCategory === 'Semua' ? 'Semua Aplikasi' : `Kategori: ${currentCategory}`;
+
+      if (filtered.length === 0) {
+        appsGrid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+        appsGrid.innerHTML = filtered.map(app => createCardHTML(app, false)).join('');
+      }
+      
+      lucide.createIcons();
+    }
+
+    function createCardHTML(app, isFeaturedCard) {
+      const iconName = app.icon || 'app-window';
+      const isInactive = !app.is_active;
+
+      return `
+        <div class="group relative bg-white rounded-2xl p-5 border ${isFeaturedCard ? 'border-amber-200 shadow-md bg-gradient-to-b from-amber-50/30 to-white' : 'border-slate-200/80 shadow-sm'} hover:shadow-xl hover:border-brand-300 hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between">
+          
+          <div>
+            <!-- Top Card Badges -->
+            <div class="flex items-center justify-between mb-3">
+              <div class="w-10 h-10 rounded-xl ${isFeaturedCard ? 'bg-amber-500 text-white' : 'bg-brand-50 text-brand-600'} flex items-center justify-center font-bold">
+                <i data-lucide="${iconName}" class="w-5 h-5"></i>
+              </div>
+              
+              <div class="flex items-center gap-1.5">
+                ${isInactive ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500">Nonaktif</span>` : ''}
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600">
+                  ${app.category}
+                </span>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <h4 class="text-base font-bold text-slate-900 group-hover:text-brand-600 transition-colors line-clamp-1">
+              ${app.title}
+            </h4>
+            <p class="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">
+              ${app.description || 'Tidak ada deskripsi singkat.'}
+            </p>
+          </div>
+
+          <!-- Bottom Card Actions -->
+          <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+            <span class="text-[11px] text-slate-400 font-medium flex items-center gap-1">
+              <i data-lucide="eye" class="w-3.5 h-3.5"></i> ${app.click_count || 0}x diakses
+            </span>
+
+            <div class="flex items-center gap-1">
+              ${currentUser ? `
+                <button onclick="openEditAppModal('${app.id}')" title="Edit App" class="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-all">
+                  <i data-lucide="edit-3" class="w-4 h-4"></i>
+                </button>
+                <button onclick="confirmDeleteApp('${app.id}')" title="Hapus App" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              ` : ''}
+
+              <button onclick="launchAppDirect('${app.id}')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold bg-brand-50 text-brand-700 hover:bg-brand-600 hover:text-white rounded-xl transition-all">
+                <span>Buka</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      `;
+    }
+
+    // OPEN APPLICATION DIRECTLY IN NEW TAB
+    function launchAppDirect(appId) {
+      const app = appsData.find(a => a.id === appId);
+      if (!app) return;
+
+      // Increment click count
+      app.click_count = (parseInt(app.click_count) || 0) + 1;
+      saveLocalDummy();
+      renderStats();
+
+      // Trigger GAS backend increment click if live
+      if (!IS_PREVIEW) {
+        fetch(`${GAS_URL}?action=incrementClick&id=${appId}`, { method: 'POST' }).catch(() => {});
+      }
+
+      // Open in NEW TAB
+      window.open(app.embed_url, '_blank');
+    }
+
+    // AUTH / LOGIN MODAL LOGIC
+    function toggleAuthModal() {
+      if (currentUser) {
+        // Logout
+        currentUser = null;
+        renderPortal();
+      } else {
+        document.getElementById('loginError').classList.add('hidden');
+        document.getElementById('authModal').classList.remove('hidden');
+      }
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.add('hidden');
+    }
+
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const user = document.getElementById('loginUsername').value.trim();
+      const pass = document.getElementById('loginPassword').value.trim();
+      const errBox = document.getElementById('loginError');
+
+      if (IS_PREVIEW) {
+        if (user === 'admin' && pass === 'edudigital') {
+          currentUser = { username: 'admin', role: 'Admin' };
+          closeAuthModal();
+          renderPortal();
+        } else {
+          errBox.innerText = "Username/Password salah! Gunakan admin / edudigital";
+          errBox.classList.remove('hidden');
+        }
+      } else {
+        try {
+          const res = await fetch(`${GAS_URL}?action=login`, {
+            method: 'POST',
+            body: JSON.stringify({ username: user, password: pass })
+          });
+          const json = await res.json();
+          if (json.status === 'success') {
+            currentUser = json.user;
+            closeAuthModal();
+            renderPortal();
+          } else {
+            errBox.innerText = json.message || "Login gagal!";
+            errBox.classList.remove('hidden');
+          }
+        } catch (err) {
+          errBox.innerText = "Koneksi ke server gagal!";
+          errBox.classList.remove('hidden');
+        }
+      }
+    }
+
+    function updateUserUI() {
+      const badge = document.getElementById('userStatusBadge');
+      const btnText = document.getElementById('authBtnText');
+      const adminControls = document.getElementById('adminControls');
+
+      if (currentUser) {
+        badge.innerHTML = `
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 flex items-center gap-1">
+            <i data-lucide="user-check" class="w-3.5 h-3.5"></i> ${currentUser.username} (Admin)
+          </span>
+        `;
+        badge.classList.remove('hidden');
+        btnText.innerText = "Keluar";
+        adminControls.classList.remove('hidden');
+        adminControls.classList.add('flex');
+      } else {
+        badge.classList.add('hidden');
+        btnText.innerText = "Admin Login";
+        adminControls.classList.add('hidden');
+        adminControls.classList.remove('flex');
+      }
+    }
+
+    // CRUD APP MANAGEMENT MODAL
+    function openAddAppModal() {
+      document.getElementById('formModalTitle').innerText = "Tambah Aplikasi Baru";
+      document.getElementById('formAppId').value = "";
+      document.getElementById('appForm').reset();
+      document.getElementById('formCategory').value = "Layanan";
+      document.getElementById('formIsActive').checked = true;
+      document.getElementById('appFormModal').classList.remove('hidden');
+    }
+
+    function openEditAppModal(appId) {
+      const app = appsData.find(a => a.id === appId);
+      if (!app) return;
+
+      document.getElementById('formModalTitle').innerText = "Edit Aplikasi";
+      document.getElementById('formAppId').value = app.id;
+      document.getElementById('formTitle').value = app.title;
+      document.getElementById('formCategory').value = app.category;
+      document.getElementById('formIcon').value = app.icon || 'app-window';
+      document.getElementById('formEmbedUrl').value = app.embed_url;
+      document.getElementById('formDescription').value = app.description || '';
+      document.getElementById('formIsActive').checked = app.is_active;
+      document.getElementById('formIsFeatured').checked = app.is_featured;
+
+      document.getElementById('appFormModal').classList.remove('hidden');
+    }
+
+    function closeAppFormModal() {
+      document.getElementById('appFormModal').classList.add('hidden');
+    }
+
+    async function handleAppFormSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('formAppId').value;
+      const appObj = {
+        id: id || `APP-${Date.now().toString().slice(-4)}`,
+        title: document.getElementById('formTitle').value.trim(),
+        category: document.getElementById('formCategory').value,
+        icon: document.getElementById('formIcon').value.trim() || 'app-window',
+        embed_url: document.getElementById('formEmbedUrl').value.trim(),
+        description: document.getElementById('formDescription').value.trim(),
+        is_active: document.getElementById('formIsActive').checked,
+        is_featured: document.getElementById('formIsFeatured').checked,
+        click_count: id ? (appsData.find(a => a.id === id)?.click_count || 0) : 0
+      };
+
+      if (IS_PREVIEW) {
+        if (id) {
+          const idx = appsData.findIndex(a => a.id === id);
+          if (idx !== -1) appsData[idx] = appObj;
+        } else {
+          appsData.unshift(appObj);
+        }
+        saveLocalDummy();
+        closeAppFormModal();
+        renderPortal();
+      } else {
+        try {
+          const action = id ? 'updateApp' : 'addApp';
+          const res = await fetch(`${GAS_URL}?action=${action}`, {
+            method: 'POST',
+            body: JSON.stringify(appObj)
+          });
+          const json = await res.json();
+          if (json.status === 'success') {
+            closeAppFormModal();
+            loadAppsData();
+          } else {
+            alert("Gagal menyimpan data ke server!");
+          }
+        } catch (err) {
+          alert("Terjadi kesalahan jaringan!");
+        }
+      }
+    }
+
+    async function confirmDeleteApp(appId) {
+      if (!confirm("Apakah Anda yakin ingin menghapus aplikasi ini?")) return;
+
+      if (IS_PREVIEW) {
+        appsData = appsData.filter(a => a.id !== appId);
+        saveLocalDummy();
+        renderPortal();
+      } else {
+        try {
+          const res = await fetch(`${GAS_URL}?action=deleteApp&id=${appId}`, { method: 'POST' });
+          const json = await res.json();
+          if (json.status === 'success') {
+            loadAppsData();
+          }
+        } catch (err) {
+          alert("Gagal menghapus aplikasi!");
+        }
+      }
+    }
+  </script>
+</body>
+</html>
